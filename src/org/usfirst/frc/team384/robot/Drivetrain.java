@@ -1,6 +1,8 @@
 package org.usfirst.frc.team384.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -25,7 +27,7 @@ public class Drivetrain {
 	private DifferentialDrive diffDrive = new DifferentialDrive(leftDrivetrain, rightDrivetrain);
 	
 	private AHRS imu;						// the NavX board
-	
+
 	// Drivetrain constructor
 	public Drivetrain()	{
 		// Initialize the IMU
@@ -114,8 +116,9 @@ public class Drivetrain {
 		rightEncoderDistance = frontRightMotor.getSelectedSensorPosition(0);
 	
 		// Return only the left encoder until the right encoder gets fixed
-		return leftEncoderDistance * Constants.DRIVE_DIST_PER_PULSE;
+		return leftEncoderDistance * Constants.kDRIVE_DIST_PER_PULSE;
 	}
+	
 	
 	/*
 	 * Get encoder velocity
@@ -143,6 +146,38 @@ public class Drivetrain {
 		diffDrive.arcadeDrive(speedaxis, turnaxis);
 	}
 
+	// Stop the motors	
+	public void stop()	{
+		frontLeftMotor.set(ControlMode.PercentOutput, 0.0);	// stop the motors
+		frontRightMotor.set(ControlMode.PercentOutput, 0.0);
+	}
+	
+	// Run full speed
+	// set fwd to true to go forward 
+	public void go(boolean fwd, double speed)	{
+		if(fwd)	{
+			frontLeftMotor.set(ControlMode.PercentOutput, -speed);	
+			frontRightMotor.set(ControlMode.PercentOutput, -speed);
+		} else	{
+			frontLeftMotor.set(ControlMode.PercentOutput, speed);	
+			frontRightMotor.set(ControlMode.PercentOutput, speed);
+		}
+	}
+	
+	public void setBrakeMode(boolean brakeon)	{
+		if (brakeon)	{
+			frontRightMotor.setNeutralMode(NeutralMode.Brake);
+			frontLeftMotor.setNeutralMode(NeutralMode.Brake);
+			rearRightMotor.setNeutralMode(NeutralMode.Brake);
+			frontLeftMotor.setNeutralMode(NeutralMode.Brake);
+		}	else {
+			frontRightMotor.setNeutralMode(NeutralMode.Coast);
+			frontLeftMotor.setNeutralMode(NeutralMode.Coast);
+			rearRightMotor.setNeutralMode(NeutralMode.Coast);
+			frontLeftMotor.setNeutralMode(NeutralMode.Coast);
+		}
+	}
+	
 	public float imuGetYaw()	{
 		return imu.getYaw();
 	}
@@ -151,26 +186,43 @@ public class Drivetrain {
 		imu.zeroYaw();
 	}
 
+	// X axis runs side to side of robot
 	public double getImuVelocityX()	{
 		return imu.getVelocityX();
 	}
 	
+
+	// Y axis runs front/rear of robot
 	public double getImuVelocityY()	{
 		return imu.getVelocityY();
 	}
 	
+	// TODO - test me
+	// Z axis runs up to ceiling/down to floor
 	public double getImuVelocityZ()	{
 		return imu.getVelocityZ();
 	}
 	
+	/*
+	 * The naVX returns acceleration in g's, adjusted for gravity
+	 * To convert to inches/sec^2, multiply by 386.1
+	 * To convert to feet/sec^2, multiply by 32.17
+	 * To convert to meters/sec^2, multiply by 9.807
+	 */
+	
+	// X axis runs side to side of robot
+	// Returns acceleration in g's
 	public double getImuAccelX()	{
 		return imu.getWorldLinearAccelX();
 	}
 	
+	// Y axis runs front/rear of robot
+	// Returns acceleration in g's
 	public double getImuAccelY()	{
 		return imu.getWorldLinearAccelY();
 	}
 	
+	// Returns acceleration in g's
 	public double getImuAccelZ()	{
 		return imu.getWorldLinearAccelZ();
 	}

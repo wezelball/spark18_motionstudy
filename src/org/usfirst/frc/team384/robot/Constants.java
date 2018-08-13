@@ -12,9 +12,9 @@ public class Constants {
 	// Drivetrain
 	public static final int DRIVE_LEFT = 0;
 	public static final int DRIVE_RIGHT = 1;
-	public static final int DRIVE_ENC_PPR  = 512;	// Talon counts 4 edges * 128 PPR
+	public static final int kDRIVE_ENC_PPR  = 512;	// Talon counts 4 edges * 128 PPR
 	// Reducing wheel diameter make robot go farther for given drive distance
-	public static final double DRIVE_DIST_PER_PULSE = 5.875 * Math.PI / DRIVE_ENC_PPR;	// units are in inches	
+	public static final double kDRIVE_DIST_PER_PULSE = (4.0 * Math.PI) / kDRIVE_ENC_PPR;	// units are in inches	
 	
 	/*
 	 * Which PID slot to pull gains from. Starting 2018, you can choose from

@@ -8,7 +8,8 @@
 package org.usfirst.frc.team384.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -23,18 +24,14 @@ public class Robot extends TimedRobot {
 	// Subsystem classes
 	public OI oi;
 	public Drivetrain drivetrain;
+	public MotionTest motionTest;
+	
 
 	// Constructor
 	public Robot() {
 		oi = new OI();
 		drivetrain = new Drivetrain();
-
-		// Set up our custom logger.
-		try {
-			Logging.CustomLogger.setup();
-		} catch (Throwable e) {
-			Logging.logException(e);
-		}
+		motionTest = new MotionTest();
 	}
 	
 	/**
@@ -43,48 +40,35 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		//m_chooser.addDefault("Default Auto", kDefaultAuto);
-		//m_chooser.addObject("My Auto", kCustomAuto);
-		//SmartDashboard.putData("Auto choices", m_chooser);
 		drivetrain.imuZeroYaw();
+		drivetrain.initializeEncoders();
+		drivetrain.setBrakeMode(true);
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
-	@Override
-	public void autonomousInit() {
-		//m_autoSelected = m_chooser.getSelected();
-		// m_autoSelected = SmartDashboard.getString("Auto Selector",
-		// 		kDefaultAuto);
-		//System.out.println("Auto selected: " + m_autoSelected);
-	}
-
-	/**
-	 * This function is called periodically during autonomous.
-	 */
-	@Override
-	public void autonomousPeriodic() {
-	}
 
 	/**
 	 * This function is called periodically during operator control.
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 		// STICK0 (DRIVER)
 		if (oi.getButtonHeld(Constants.STICK0,1))	{
 			drivetrain.arcadeDrive(oi.getAxis(Constants.STICK0, Constants.YAXIS), 
 					-oi.getAxis(Constants.STICK0, Constants.XAXIS));
 		}
+		
+		// Take off fast as you can and log data if button pressed,
+		// stop immediately if released
+		if (oi.getButtonHeld(Constants.STICK0,3))	{
+			motionTest.start();
+		} else if (oi.getButtonReleased(Constants.STICK0,3))	{
+			motionTest.stop();
+		}
+		
+		/*
+		 * Let's do some useful stuff with dashboard
+		 */
 		SmartDashboard.putNumber("Left encoder position: ", drivetrain.getEncoderPosition(Constants.DRIVE_LEFT));
 		SmartDashboard.putNumber("Right encoder position: ", drivetrain.getEncoderPosition(Constants.DRIVE_RIGHT));
 		SmartDashboard.putNumber("Left side velocity: ", drivetrain.getEncoderVelocity(Constants.DRIVE_LEFT));
