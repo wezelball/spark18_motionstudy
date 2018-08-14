@@ -157,10 +157,10 @@ public class Drivetrain {
 	public void go(boolean fwd, double speed)	{
 		if(fwd)	{
 			frontLeftMotor.set(ControlMode.PercentOutput, -speed);	
-			frontRightMotor.set(ControlMode.PercentOutput, -speed);
+			frontRightMotor.set(ControlMode.PercentOutput, speed);
 		} else	{
 			frontLeftMotor.set(ControlMode.PercentOutput, speed);	
-			frontRightMotor.set(ControlMode.PercentOutput, speed);
+			frontRightMotor.set(ControlMode.PercentOutput, -speed);
 		}
 	}
 	

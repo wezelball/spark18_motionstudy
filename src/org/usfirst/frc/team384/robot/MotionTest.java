@@ -10,8 +10,9 @@ public class MotionTest {
 	// I hope this friggin works!
 	private Drivetrain drivetrain = new Drivetrain(); 
 	
-	private boolean isFirstTime = true;
-	public boolean isTestRunning;
+	private boolean isFirstTime;
+	public boolean isRunning;
+	public boolean isStopping;
 	
 	double enc_position, distance, velocity, accel, jerk;
 	
@@ -24,23 +25,30 @@ public class MotionTest {
 		} catch (Throwable e) {
 			Logging.logException(e);
 		}
+	
+		isFirstTime = true;
+		isRunning = false;
+		isStopping = false;
 	}
 	
-	public void start()	{
+	public void start(double runtime, double runpower)	{
 		if(isFirstTime) {
 			motionTestTimer.start();
-			isTestRunning = true;
+			isRunning = true;
+			//System.out.println("First entry into method start()");
 			
 			// Clean up when you leave
 			isFirstTime = false;
 		} else	{
-			if(!motionTestTimer.hasPeriodPassed(2.0))	{
-				drivetrain.go(true, 0.5);
+			if(!motionTestTimer.hasPeriodPassed(runtime) && !isStopping)	{
+				drivetrain.go(true, runpower);
 			} else	{
 				drivetrain.stop();
-				
-				if (velocity < 0.1)	{	// robot
-					isTestRunning = false;
+				isStopping = true;
+				//System.out.println("Stop command issued, velocity");
+				if (velocity < 0.1)	{
+					stop();
+					//System.out.println("Zero velocity reached");
 				}
 			}
 			
@@ -55,12 +63,13 @@ public class MotionTest {
 			
 			// Log the data
 			Logging.consoleLog
-				("Log: " + enc_position + "," + distance + "," + velocity + "," + accel);
+				("," + enc_position + "," + distance + "," + velocity + "," + accel);
 		}
 	}
 	
 	public void stop()	{
-		isTestRunning = false;
+		isRunning = false;
 		isFirstTime = true;
+		isStopping = false;
 	}
 }

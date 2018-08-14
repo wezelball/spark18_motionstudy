@@ -45,7 +45,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * host: roboRIO-384-frc.local
  * port: 22
  * user: lvuser
- * password: (non password)
+ * password: (no password)
  * 
  * Once there, look for Logging.txt.0-99.  After 99 reached, logging will fail,
  * files will have tp be deleted.
@@ -274,8 +274,7 @@ public class Logging {
     public static void consoleLog()
     {
         // logs to the console as well as our log file on RR disk.
-        //logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
-        logger.log(Level.INFO);
+        logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
     }
 
     /**

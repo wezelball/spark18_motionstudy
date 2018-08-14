@@ -25,7 +25,9 @@ public class Robot extends TimedRobot {
 	public OI oi;
 	public Drivetrain drivetrain;
 	public MotionTest motionTest;
-	
+
+	double runTime  = 10.0;
+	double runPower = 1.0;
 
 	// Constructor
 	public Robot() {
@@ -60,10 +62,14 @@ public class Robot extends TimedRobot {
 		
 		// Take off fast as you can and log data if button pressed,
 		// stop immediately if released
-		if (oi.getButtonHeld(Constants.STICK0,3))	{
-			motionTest.start();
-		} else if (oi.getButtonReleased(Constants.STICK0,3))	{
+		if (oi.getButtonPressed(Constants.STICK0,2))	{
+			motionTest.start(runTime, runPower);
+		} else if (oi.getButtonReleased(Constants.STICK0,2))	{
 			motionTest.stop();
+		}
+		
+		if (motionTest.isRunning)	{
+			motionTest.start(runTime, runPower);
 		}
 		
 		/*
