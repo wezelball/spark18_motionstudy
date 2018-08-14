@@ -145,7 +145,7 @@ public class Logging {
         {
             StringBuffer buf = new StringBuffer(1024);
             
-            buf.append(String.format("<%d>", rec.getThreadID()));
+            //buf.append(String.format("<%d>", rec.getThreadID()));
             buf.append(dateFormat.format(new Date(rec.getMillis())));
             buf.append(" ");
             buf.append(formatMessage(rec));
@@ -264,7 +264,8 @@ public class Logging {
     public static void consoleLog(String message, Object... parms)
     {
         // logs to the console as well as our log file on RR disk.
-        logger.log(Level.INFO, String.format("robot: %s: %s", currentMethod(2), String.format(message, parms)));
+        //logger.log(Level.INFO, String.format("robot: %s: %s", currentMethod(2), String.format(message, parms)));
+        logger.log(Level.INFO, String.format("%s", String.format(message, parms)));
     }
     
     /**
@@ -273,7 +274,8 @@ public class Logging {
     public static void consoleLog()
     {
         // logs to the console as well as our log file on RR disk.
-        logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
+        //logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
+        logger.log(Level.INFO);
     }
 
     /**
