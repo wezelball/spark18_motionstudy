@@ -134,11 +134,11 @@ public class Logging {
         
     private static class LogFormatter extends Formatter 
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:S");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss.S");
         
         public LogFormatter()
         {
-            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
         }
 
         public String format(LogRecord rec) 

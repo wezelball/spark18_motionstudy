@@ -35,7 +35,7 @@ public class MotionTest {
 		if(isFirstTime) {
 			motionTestTimer.start();
 			isRunning = true;
-			//System.out.println("First entry into method start()");
+			drivetrain.initializeEncoders();
 			
 			// Clean up when you leave
 			isFirstTime = false;
